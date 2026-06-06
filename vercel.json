@@ -1,15 +1,14 @@
 {
   "version": 2,
   "builds": [
-    {
-      "src": "index.html",
-      "use": "@vercel/static"
-    }
+    { "src": "index.html", "use": "@vercel/static" }
   ],
   "routes": [
     {
-      "src": "/(.*)",
-      "dest": "/$1"
-    }
+      "src": "/profile-Image",
+      "headers": { "Content-Type": "image/jpeg" },
+      "dest": "/profile-Image"
+    },
+    { "src": "/(.*)", "dest": "/$1" }
   ]
 }
