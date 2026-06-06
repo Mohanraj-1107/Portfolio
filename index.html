@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mohanraj Subramani — Software Developer</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      /* Light palette */
+      --bg:          #ffffff;
+      --bg-alt:      #f8f9fb;
+      --border:      #e4e7ed;
+      --border-dk:   #c9cdd6;
+      --text:        #0d1117;
+      --text-2:      #3d4451;
+      --text-3:      #6e7787;
+
+      /* Dark palette */
+      --dark-bg:     #0d1117;
+      --dark-bg2:    #161b22;
+      --dark-bg3:    #1c2230;
+      --dark-border: rgba(255,255,255,0.08);
+      --dark-border2:rgba(255,255,255,0.14);
+      --dark-text:   #e6edf3;
+      --dark-text2:  #b0bec5;
+      --dark-text3:  #6e8098;
+
+      /* Accent */
+      --accent:      #1a56db;
+      --accent-dk:   #1143b8;
+      --accent-lt:   #3b82f6;
+      --accent-bg:   #eff4ff;
+      --accent-glow: rgba(26,86,219,0.25);
+
+      --navy:        #0f1f3d;
+      --radius:      6px;
+      --radius-md:   10px;
+      --shadow-sm:   0 1px 3px rgba(0,0,0,.07), 0 1px 2px rgba(0,0,0,.05);
+      --shadow:      0 4px 12px rgba(0,0,0,.08);
+      --shadow-md:   0 8px 28px rgba(0,0,0,.12);
+      --shadow-dark: 0 4px 20px rgba(0,0,0,.5);
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'IBM Plex Sans', sans-serif;
+      background: var(--dark-bg);
+      color: var(--text);
+      line-height: 1.6; font-size: 15px;
+      -webkit-font-smoothing: antialiased;
+    }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--dark-bg); }
+    ::-webkit-scrollbar-thumb { background: #30363d; border-radius: 2px; }
+
+    /* ══════════════════════════════
+       NAV — always dark
+    ══════════════════════════════ */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      height: 60px; display: flex; align-items: center; justify-content: space-between;
+      padding: 0 7%;
+      background: rgba(13,17,23,0.92);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--dark-border);
+    }
+    .nav-brand {
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-weight: 700; font-size: 0.95rem; letter-spacing: -0.2px;
+      color: var(--dark-text); text-decoration: none;
+    }
+    .nav-brand span { color: var(--accent-lt); }
+    .nav-links { display: flex; align-items: center; gap: 2px; list-style: none; }
+    .nav-links a {
+      font-size: 0.82rem; font-weight: 500; color: var(--dark-text3);
+      text-decoration: none; padding: 6px 14px; border-radius: var(--radius);
+      transition: color .18s, background .18s;
+    }
+    .nav-links a:hover { color: var(--dark-text); background: rgba(255,255,255,0.06); }
+    .nav-links .nav-cta {
+      background: var(--accent); color: #fff; margin-left: 6px;
+      border-radius: var(--radius); font-weight: 600;
+    }
+    .nav-links .nav-cta:hover { background: var(--accent-dk); color: #fff; }
+
+    /* ══════════════════════════════
+       SHARED LAYOUT
+    ══════════════════════════════ */
+    .wrap { max-width: 1080px; margin: 0 auto; padding: 0 7%; }
+    .section { padding: 88px 0; }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-family: 'IBM Plex Sans', sans-serif;
+      font-size: 0.85rem; font-weight: 600; cursor: pointer;
+      text-decoration: none; transition: all .2s;
+      padding: 10px 22px; border-radius: var(--radius); border: none;
+    }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { background: var(--accent-dk); transform: translateY(-1px); box-shadow: 0 4px 14px var(--accent-glow); }
+    .btn-light {
+      background: rgba(255,255,255,0.08); color: var(--dark-text);
+      border: 1px solid var(--dark-border2);
+    }
+    .btn-light:hover { background: rgba(255,255,255,0.13); transform: translateY(-1px); }
+    .btn-dark {
+      background: var(--bg); color: var(--text-2); border: 1px solid var(--border);
+    }
+    .btn-dark:hover { border-color: var(--border-dk); background: var(--bg-alt); transform: translateY(-1px); }
+
+    /* Tags */
+    .tag {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.72rem; font-weight: 500; padding: 3px 10px; border-radius: 4px;
+    }
+    .tag-blue  { background: var(--accent-bg); border: 1px solid #c7d9ff; color: var(--accent); }
+    .tag-navy  { background: #f0f2f8; border: 1px solid #d0d5e8; color: var(--navy); }
+    .tag-dark  { background: rgba(59,130,246,0.12); border: 1px solid rgba(59,130,246,0.25); color: #60a5fa; }
+    .tag-dark2 { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); color: var(--dark-text2); }
+
+    /* Section header — light version */
+    .eyebrow { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent); margin-bottom: 10px; }
+    .section-h { font-family: 'DM Serif Display', serif; font-size: clamp(1.75rem,3vw,2.4rem); font-weight: 400; color: var(--text); line-height: 1.25; margin-bottom: 10px; letter-spacing: -0.3px; }
+    .section-p { color: var(--text-3); font-size: 0.95rem; max-width: 460px; line-height: 1.7; margin-bottom: 48px; }
+
+    /* Section header — dark version */
+    .eyebrow-dk { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent-lt); margin-bottom: 10px; }
+    .section-h-dk { font-family: 'DM Serif Display', serif; font-size: clamp(1.75rem,3vw,2.4rem); font-weight: 400; color: var(--dark-text); line-height: 1.25; margin-bottom: 10px; letter-spacing: -0.3px; }
+    .section-p-dk { color: var(--dark-text2); font-size: 0.95rem; max-width: 460px; line-height: 1.7; margin-bottom: 48px; }
+
+    /* Cards — light */
+    .card {
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: var(--radius-md); box-shadow: var(--shadow-sm);
+      transition: box-shadow .25s, border-color .25s, transform .25s;
+    }
+    .card:hover { box-shadow: var(--shadow-md); border-color: var(--border-dk); transform: translateY(-2px); }
+
+    /* Cards — dark */
+    .card-dk {
+      background: var(--dark-bg2); border: 1px solid var(--dark-border);
+      border-radius: var(--radius-md); box-shadow: var(--shadow-dark);
+      transition: border-color .25s, transform .25s, background .25s;
+    }
+    .card-dk:hover { border-color: var(--dark-border2); background: var(--dark-bg3); transform: translateY(-2px); }
+
+    /* Status dot */
+    .status-dot { display: inline-flex; align-items: center; gap: 7px; font-size: 0.78rem; font-weight: 500; color: #4ade80; }
+    .status-dot::before { content: ''; display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #22c55e; animation: pulse-green 2.2s infinite; }
+
+    /* ══════════════════════════════
+       HERO — DARK
+    ══════════════════════════════ */
+    .hero { min-height: 100vh; display: flex; align-items: center; padding-top: 60px; background: var(--dark-bg); position: relative; overflow: hidden; }
+    /* Subtle grid lines on hero */
+    .hero::before {
+      content: ''; position: absolute; inset: 0;
+      background-image: linear-gradient(var(--dark-border) 1px, transparent 1px), linear-gradient(90deg, var(--dark-border) 1px, transparent 1px);
+      background-size: 64px 64px; pointer-events: none;
+    }
+    /* Glow blob */
+    .hero::after {
+      content: ''; position: absolute;
+      width: 600px; height: 400px; border-radius: 50%;
+      background: radial-gradient(ellipse, rgba(26,86,219,0.12) 0%, transparent 70%);
+      top: 10%; left: -10%; pointer-events: none;
+    }
+    .hero-grid {
+      display: grid; grid-template-columns: 1fr 200px;
+      gap: 56px; align-items: center; width: 100%; padding: 60px 0;
+      position: relative; z-index: 1;
+    }
+    .hero-meta { display: flex; align-items: center; gap: 20px; margin-bottom: 24px; flex-wrap: wrap; }
+    .hero-location { font-size: 0.8rem; color: var(--dark-text3); font-weight: 500; display: flex; align-items: center; gap: 5px; }
+    .hero-name { font-family: 'DM Serif Display', serif; font-size: clamp(2.8rem,6vw,4.5rem); font-weight: 400; letter-spacing: -1.5px; line-height: 1.08; color: var(--dark-text); margin-bottom: 16px; }
+    .hero-name em { color: var(--accent-lt); font-style: italic; }
+    .hero-role { font-size: 1rem; color: var(--dark-text2); font-weight: 500; margin-bottom: 20px; }
+    .hero-role .sep { color: var(--dark-border2); margin: 0 10px; }
+    .hero-bio { color: var(--dark-text2); font-size: 0.95rem; max-width: 500px; line-height: 1.75; margin-bottom: 36px; }
+    .hero-btns { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 52px; }
+    .hero-stats { display: flex; gap: 40px; padding-top: 28px; border-top: 1px solid var(--dark-border); flex-wrap: wrap; }
+    .stat-val { font-family: 'DM Serif Display', serif; font-size: 2rem; letter-spacing: -1px; color: var(--dark-text); line-height: 1; margin-bottom: 4px; }
+    .stat-lbl { font-size: 0.73rem; font-weight: 600; color: var(--dark-text3); text-transform: uppercase; letter-spacing: 0.06em; }
+
+    /* Photo frame */
+    .photo-frame {
+      width: 200px; height: 230px; border-radius: var(--radius-md);
+      border: 1px solid var(--dark-border2); background: var(--dark-bg2);
+      overflow: hidden; position: relative; box-shadow: var(--shadow-dark), 0 0 0 1px var(--dark-border);
+    }
+    .photo-frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .photo-placeholder { width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; }
+    .ph-label { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--dark-text3); background: rgba(255,255,255,0.04); border: 1px dashed var(--dark-border2); padding: 6px 14px; border-radius: var(--radius); }
+
+    /* ══════════════════════════════
+       ABOUT — DARK
+    ══════════════════════════════ */
+    .about-section { background: var(--dark-bg2); border-top: 1px solid var(--dark-border); border-bottom: 1px solid var(--dark-border); }
+    .about-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(220px,1fr)); gap: 1px; background: var(--dark-border); border: 1px solid var(--dark-border); border-radius: var(--radius-md); overflow: hidden; }
+    .about-cell { background: var(--dark-bg2); padding: 28px; transition: background .2s; }
+    .about-cell:hover { background: var(--dark-bg3); }
+    .ac-label { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent-lt); margin-bottom: 10px; }
+    .ac-title { font-family: 'DM Serif Display', serif; font-size: 1.05rem; color: var(--dark-text); margin-bottom: 8px; }
+    .ac-desc { font-size: 0.84rem; color: var(--dark-text2); line-height: 1.65; }
+
+    /* ══════════════════════════════
+       SKILLS — DARK
+    ══════════════════════════════ */
+    .skills-section { background: var(--dark-bg2); border-top: 1px solid var(--dark-border); border-bottom: 1px solid var(--dark-border); }
+    .skill-row { margin-bottom: 32px; }
+    .skill-row-label { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--dark-text3); margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid var(--dark-border); }
+    .skill-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .skill-chip {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.78rem; font-weight: 500;
+      padding: 7px 16px; border-radius: var(--radius);
+      background: rgba(255,255,255,0.04); border: 1px solid var(--dark-border2);
+      color: var(--dark-text2); transition: all .2s; cursor: default;
+    }
+    .skill-chip:hover { background: rgba(59,130,246,0.15); border-color: rgba(59,130,246,0.35); color: #93c5fd; transform: translateY(-1px); }
+
+    /* ══════════════════════════════
+       EXPERIENCE — DARK
+    ══════════════════════════════ */
+    .exp-section { background: var(--dark-bg); border-top: 1px solid var(--dark-border); }
+    .timeline { position: relative; }
+    .timeline::before { content: ''; position: absolute; left: 0; top: 8px; bottom: 8px; width: 1px; background: var(--dark-border2); }
+    .tl-item { display: flex; gap: 32px; margin-bottom: 32px; }
+    .tl-marker { position: relative; flex-shrink: 0; }
+    .tl-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--accent-lt); margin-top: 8px; box-shadow: 0 0 0 3px rgba(59,130,246,0.2); position: relative; z-index: 1; }
+    .tl-card { flex: 1; padding: 28px 30px; margin-bottom: 0; }
+    .tl-head { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 10px; margin-bottom: 4px; }
+    .tl-role { font-family: 'DM Serif Display', serif; font-size: 1.15rem; color: var(--dark-text); }
+    .tl-company { font-size: 0.85rem; font-weight: 600; color: var(--accent-lt); margin-bottom: 3px; }
+    .tl-loc { font-size: 0.78rem; color: var(--dark-text3); margin-bottom: 16px; }
+    .tl-period { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; font-weight: 500; color: var(--dark-text3); background: var(--dark-bg2); border: 1px solid var(--dark-border2); padding: 4px 12px; border-radius: var(--radius); white-space: nowrap; }
+    .tl-bullets { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+    .tl-bullets li { font-size: 0.875rem; color: var(--dark-text2); line-height: 1.6; padding-left: 16px; position: relative; }
+    .tl-bullets li::before { content: ''; position: absolute; left: 0; top: 9px; width: 5px; height: 1px; background: var(--dark-border2); }
+
+    /* ══════════════════════════════
+       PROJECTS — DARK
+    ══════════════════════════════ */
+    .projects-section { background: var(--dark-bg); border-top: 1px solid var(--dark-border); }
+    .proj-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(300px,1fr)); gap: 1px; background: var(--dark-border); border: 1px solid var(--dark-border); border-radius: var(--radius-md); overflow: hidden; }
+    .proj-cell { background: var(--dark-bg2); padding: 32px; display: flex; flex-direction: column; transition: background .2s; }
+    .proj-cell:hover { background: var(--dark-bg3); }
+    .proj-number { font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem; font-weight: 500; color: var(--dark-text3); margin-bottom: 14px; letter-spacing: 0.05em; }
+    .proj-name { font-family: 'DM Serif Display', serif; font-size: 1.25rem; color: var(--dark-text); margin-bottom: 4px; }
+    .proj-sub { font-size: 0.73rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--dark-text3); margin-bottom: 20px; }
+    .proj-divider { height: 1px; background: var(--dark-border); margin-bottom: 18px; }
+    .proj-bullets { list-style: none; flex: 1; margin-bottom: 24px; display: flex; flex-direction: column; gap: 9px; }
+    .proj-bullets li { font-size: 0.845rem; color: var(--dark-text2); line-height: 1.6; padding-left: 14px; position: relative; }
+    .proj-bullets li::before { content: '—'; position: absolute; left: 0; color: var(--dark-text3); font-size: 0.7rem; top: 1px; }
+    .proj-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+
+    /* ══════════════════════════════
+       EDUCATION — DARK
+    ══════════════════════════════ */
+    .edu-section { background: var(--dark-bg2); border-top: 1px solid var(--dark-border); }
+    .edu-row { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 20px; padding: 28px 30px; }
+    .edu-school { font-family: 'DM Serif Display', serif; font-size: 1.2rem; color: var(--dark-text); margin-bottom: 5px; }
+    .edu-degree { font-size: 0.875rem; color: var(--dark-text2); font-weight: 500; margin-bottom: 5px; }
+    .edu-loc { font-size: 0.8rem; color: var(--dark-text3); }
+    .edu-right { text-align: right; }
+    .edu-year { font-family: 'DM Serif Display', serif; font-size: 1.5rem; color: var(--dark-text); }
+    .edu-cgpa { font-size: 0.8rem; color: var(--dark-text3); font-weight: 500; }
+    .ach-row { display: flex; align-items: center; gap: 20px; padding: 22px 30px; border-top: 1px solid var(--dark-border); flex-wrap: wrap; }
+    .ach-count { font-family: 'DM Serif Display', serif; font-size: 2.2rem; color: var(--accent-lt); line-height: 1; flex-shrink: 0; }
+    .ach-body h4 { font-weight: 600; font-size: 0.9rem; margin-bottom: 3px; color: var(--dark-text); }
+    .ach-body p { font-size: 0.82rem; color: var(--dark-text3); }
+
+    /* ══════════════════════════════
+       CONTACT — DARK CTA + LIGHT GRID
+    ══════════════════════════════ */
+    .contact-section { background: var(--dark-bg2); border-top: 1px solid var(--dark-border); }
+    .cta-band { background: var(--navy); border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius-md); padding: 52px 52px; display: flex; justify-content: space-between; align-items: center; gap: 40px; flex-wrap: wrap; position: relative; overflow: hidden; }
+    .cta-band::before { content: ''; position: absolute; width: 400px; height: 300px; border-radius: 50%; background: radial-gradient(ellipse, rgba(26,86,219,0.2) 0%, transparent 70%); right: -100px; top: -80px; pointer-events: none; }
+    .cta-band h2 { font-family: 'DM Serif Display', serif; font-size: 2rem; color: #fff; margin-bottom: 8px; position: relative; }
+    .cta-band p { font-size: 0.9rem; color: #94a3b8; max-width: 380px; position: relative; }
+    .btn-white { background: #fff; color: var(--navy); font-family: 'IBM Plex Sans', sans-serif; font-weight: 700; font-size: 0.875rem; padding: 12px 26px; border-radius: var(--radius); text-decoration: none; display: inline-flex; align-items: center; gap: 7px; transition: all .2s; white-space: nowrap; position: relative; }
+    .btn-white:hover { background: var(--bg-alt); transform: translateY(-1px); box-shadow: 0 4px 16px rgba(0,0,0,.25); }
+
+    .contact-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(240px,1fr)); gap: 1px; background: var(--dark-border); border: 1px solid var(--dark-border); border-radius: var(--radius-md); overflow: hidden; margin-top: 28px; }
+    .contact-item { background: var(--dark-bg2); padding: 22px 24px; display: flex; align-items: center; gap: 16px; text-decoration: none; color: var(--dark-text); transition: background .2s; }
+    .contact-item:hover { background: var(--dark-bg3); }
+    .contact-icon-wrap { width: 38px; height: 38px; border-radius: var(--radius); background: rgba(255,255,255,0.05); border: 1px solid var(--dark-border2); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .ci-label { font-size: 0.67rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--dark-text3); margin-bottom: 3px; }
+    .ci-val { font-size: 0.875rem; font-weight: 500; color: var(--dark-text); }
+
+    /* ══════════════════════════════
+       FOOTER — DARK
+    ══════════════════════════════ */
+    footer { background: var(--dark-bg); border-top: 1px solid var(--dark-border); padding: 28px 7%; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; font-size: 0.78rem; color: var(--dark-text3); font-weight: 500; }
+    footer a { color: var(--dark-text3); text-decoration: none; transition: color .2s; }
+    footer a:hover { color: var(--accent-lt); }
+
+    /* ══════════════════════════════
+       ANIMATIONS
+    ══════════════════════════════ */
+    @keyframes pulse-green {
+      0%,100% { box-shadow: 0 0 0 0 rgba(34,197,94,0.4); }
+      50%      { box-shadow: 0 0 0 5px rgba(34,197,94,0); }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fu  { animation: fadeUp 0.6s ease both; }
+    .d1  { animation-delay: 0.05s; }
+    .d2  { animation-delay: 0.12s; }
+    .d3  { animation-delay: 0.22s; }
+    .d4  { animation-delay: 0.33s; }
+    .d5  { animation-delay: 0.45s; }
+
+    /* ══════════════════════════════
+       RESPONSIVE
+    ══════════════════════════════ */
+    @media (max-width: 860px) {
+      .hero-grid { grid-template-columns: 1fr; gap: 48px; }
+      .photo-frame { width: 100%; max-width: 200px; margin: 0 auto; height: 230px; }
+      .cta-band { padding: 36px 28px; }
+    }
+    @media (max-width: 600px) {
+      .nav-links .hide-sm { display: none; }
+      .hero-name { letter-spacing: -1px; }
+      .hero-stats { gap: 24px; }
+      .tl-item { flex-direction: column; gap: 12px; }
+      .timeline::before { display: none; }
+    }
+  </style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+
+/* ── SVG ICONS ── */
+const Icon = ({ name, size = 16, color = "currentColor" }) => {
+  const icons = {
+    mail: (
+      <svg width={size} height={size} fill="none" stroke={color} strokeWidth="1.6" viewBox="0 0 24 24">
+        <rect x="2" y="4" width="20" height="16" rx="2"/>
+        <path d="M2 7l10 7 10-7"/>
+      </svg>
+    ),
+    phone: (
+      <svg width={size} height={size} fill="none" stroke={color} strokeWidth="1.6" viewBox="0 0 24 24">
+        <path d="M6.6 10.8a15.05 15.05 0 006.6 6.6l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.58.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1C10.85 21 3 13.15 3 4c0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.58.11.35.03.74-.24 1.02z"/>
+      </svg>
+    ),
+    linkedin: (
+      <svg width={size} height={size} fill={color} viewBox="0 0 24 24">
+        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+      </svg>
+    ),
+    github: (
+      <svg width={size} height={size} fill={color} viewBox="0 0 24 24">
+        <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
+      </svg>
+    ),
+    pin: (
+      <svg width={size} height={size} fill="none" stroke={color} strokeWidth="1.6" viewBox="0 0 24 24">
+        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+        <circle cx="12" cy="10" r="3"/>
+      </svg>
+    ),
+    arrow: (
+      <svg width={size} height={size} fill="none" stroke={color} strokeWidth="1.8" viewBox="0 0 24 24">
+        <path d="M5 12h14M12 5l7 7-7 7"/>
+      </svg>
+    ),
+    user: (
+      <svg width={72} height={72} fill="none" viewBox="0 0 72 72">
+        <circle cx="36" cy="26" r="14" fill="#2d333b"/>
+        <ellipse cx="36" cy="60" rx="24" ry="14" fill="#2d333b"/>
+      </svg>
+    ),
+    leetcode: (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill={color}>
+        <path d="M13.483 0a1.374 1.374 0 0 0-.961.438L7.116 6.226l-3.854 4.126a5.266 5.266 0 0 0-1.209 2.104 5.35 5.35 0 0 0-.125.513 5.527 5.527 0 0 0 .062 2.362 5.83 5.83 0 0 0 .349 1.017 5.938 5.938 0 0 0 1.271 1.818l4.277 4.193.039.038c2.248 2.165 5.852 2.133 8.063-.074l2.396-2.392c.54-.54.54-1.414.003-1.955a1.378 1.378 0 0 0-1.951-.003l-2.396 2.392a3.021 3.021 0 0 1-4.205.038l-.02-.019-4.276-4.193c-.652-.64-.972-1.469-.948-2.263a2.68 2.68 0 0 1 .066-.523 2.545 2.545 0 0 1 .619-1.164L9.13 8.114c1.058-1.134 3.204-1.27 4.43-.278l3.501 2.831c.593.48 1.461.387 1.94-.207a1.384 1.384 0 0 0-.207-1.943l-3.5-2.831c-.8-.647-1.766-1.045-2.774-1.202l2.015-2.158A1.384 1.384 0 0 0 13.483 0zm-2.866 12.815a1.38 1.38 0 0 0-1.38 1.382 1.38 1.38 0 0 0 1.38 1.382H19.7a1.38 1.38 0 0 0 1.38-1.382 1.38 1.38 0 0 0-1.38-1.382z"/>
+      </svg>
+    ),
+  };
+  return icons[name] || null;
+};
+
+/* ════════════════════════════════════════════════════════
+   ✏️  PORTFOLIO DATA — edit this object to update the page
+   ════════════════════════════════════════════════════════ */
+const DATA = {
+
+  /* ── Personal Info ───────────────────────────────────── */
+  profile: {
+    firstName : "Mohanraj",
+    lastName  : "Subramani",
+    role      : "Software Developer",
+    role2     : "Backend Engineer",
+    company   : "Zoho · Qntrl",
+    location  : "Tirupur, Tamil Nadu",
+    phone     : "8220925693",
+    email     : "mohanraj1360@gmail.com",
+    linkedin  : "https://www.linkedin.com/in/mohanraj-subramani-567b9b290/",
+    github    : "https://github.com/Mohanraj-1107",
+    bio       : "Software Developer at Zoho specializing in distributed systems and Kafka-based event-driven architecture. I design and ship backend infrastructure that handles high-throughput data with zero downtime.",
+    status    : "Available for opportunities",
+    /* photo: set to your image filename, e.g. "photo.jpg"
+       Place the file in the same folder as index.html     */
+    photo     : "profile-image.jpeg",
+    leetcode  : "https://leetcode.com/u/mohanraj1124/",
+  },
+
+  /* ── Hero Stats ──────────────────────────────────────── */
+  stats: [
+    { value: "1+",   label: "Years at Zoho"   },
+    { value: "300+", label: "LeetCode Solved"  },
+    { value: "8.3",  label: "CGPA"             },
+    { value: "13+",  label: "Technologies"     },
+  ],
+
+  /* ── About Cards ─────────────────────────────────────── */
+  about: [
+    {
+      label: "Apache Kafka",
+      title: "Event-Driven Architecture",
+      desc : "Designed and implemented Kafka-based workflows for reliable, high-throughput data streaming across distributed services.",
+    },
+    {
+      label: "Redis",
+      title: "Caching & Performance",
+      desc : "Applied Redis caching strategies that reduced API response times by ~40% and significantly cut database load in production.",
+    },
+    {
+      label: "Microservices",
+      title: "Distributed Systems",
+      desc : "Architected fault-tolerant microservices with high availability guarantees, designed for real-world failure conditions.",
+    },
+    {
+      label: "Data Migration",
+      title: "Zero-Downtime Operations",
+      desc : "Led Cassandra data migrations using phased rollout strategies — zero data loss, zero service interruption.",
+    },
+  ],
+
+  /* ── Skills ──────────────────────────────────────────── */
+  skills: {
+    "Languages & Runtimes"   : ["Java", "JavaScript", "Node.js", "SQL"],
+    "Frameworks & Libraries" : ["Spring Boot", "React.js", "gRPC", "REST APIs"],
+    "Data & Messaging"       : ["Apache Kafka", "Redis", "Cassandra", "Docker"],
+    "Practices"              : ["Distributed Systems", "Microservices", "Event-Driven Architecture", "Zero-Downtime Migrations"],
+  },
+
+  /* ── Work Experience ─────────────────────────────────── */
+  experience: [
+    {
+      role    : "Software Developer",
+      company : "Zoho Corporation — Qntrl",
+      location: "Salem, Tamil Nadu",
+      period  : "Jan 2025 – Present",
+      bullets : [
+        "Built and maintained scalable microservices for the Qntrl product as a Backend Developer.",
+        "Designed event-driven workflows using Apache Kafka for high-throughput, reliable data streaming.",
+        "Implemented Redis caching strategies, improving response times and reducing database load.",
+        "Led Cassandra data migration with zero data loss and zero downtime using phased strategies.",
+        "Managed server infrastructure, handled deployments, and debugged production issues.",
+        "Collaborated on distributed systems design ensuring fault tolerance and high availability.",
+      ],
+    },
+  ],
+
+  /* ── Projects ────────────────────────────────────────── */
+  projects: [
+    {
+      name    : "TaskFlow",
+      tagline : "Project Management Web Application",
+      stack   : ["Java", "Spring Boot", "React.js", "Redis", "REST API", "SQL"],
+      tagStyle: "tag-dark",
+      bullets : [
+        "Full-stack app for teams to create, assign and track tasks in real time.",
+        "Redis caching for dashboards and sessions — reduced API response time by ~40%.",
+        "RESTful Spring Boot backend with a responsive React.js frontend.",
+        "JWT authentication and role-based access control for multi-user environments.",
+      ],
+    },
+    {
+      name    : "Kafka Cluster Simulation",
+      tagline : "Distributed Systems Research Project",
+      stack   : ["Apache Kafka", "Virtual Machines", "ZooKeeper", "Linux"],
+      tagStyle: "tag-dark2",
+      bullets : [
+        "Multi-broker Kafka cluster across Virtual Machines for real-world distributed messaging.",
+        "ZooKeeper ensemble for leader election, partition rebalancing and fault tolerance.",
+        "Stress-tested producer/consumer scenarios; analyzed throughput lag metrics under load.",
+        "Consistent message delivery guarantees demonstrated under broker failure conditions.",
+      ],
+    },
+  ],
+
+  /* ── Education ───────────────────────────────────────── */
+  education: {
+    institution: "K.S. Rangasamy College of Technology",
+    degree     : "Bachelor of Technology — Information Technology",
+    location   : "Tiruchengode, Tamil Nadu",
+    year       : "2025",
+    cgpa       : "8.3 / 10",
+  },
+
+  /* ── Achievements ────────────────────────────────────── */
+  achievements: [
+    {
+      count     : "300+",
+      title     : "LeetCode Problems Solved",
+      desc      : "Strong command of data structures, algorithms, and analytical problem-solving.",
+      profileUrl: "https://leetcode.com/u/mohanraj1124/",
+    },
+  ],
+
+}; /* ── end DATA ── */
+
+/* ── NAV ── */
+const Nav = () => (
+  <nav className="nav">
+    <a href="#hero" className="nav-brand">{DATA.profile.firstName} <span>{DATA.profile.lastName}</span></a>
+    <ul className="nav-links">
+      {["About","Skills","Experience","Projects","Education"].map(s => (
+        <li key={s} className="hide-sm"><a href={`#${s.toLowerCase()}`}>{s}</a></li>
+      ))}
+      <li><a href={`mailto:${DATA.profile.email}`} className="nav-cta">Contact</a></li>
+    </ul>
+  </nav>
+);
+
+/* ── HERO — dark ── */
+const Hero = () => {
+  const p = DATA.profile;
+  return (
+  <section id="hero" className="hero">
+    <div className="wrap">
+      <div className="hero-grid">
+        <div>
+          <div className="hero-meta fu d1">
+            <span className="status-dot">{p.status}</span>
+            <span className="hero-location">
+              <Icon name="pin" size={12} color="var(--dark-text3)" />
+              {p.location}
+            </span>
+          </div>
+          <h1 className="hero-name fu d2">
+            {p.firstName}<br /><em>{p.lastName}</em>
+          </h1>
+          <p className="hero-role fu d3">
+            {p.role}
+            <span className="sep">/</span>
+            {p.role2}
+            <span className="sep">/</span>
+            {p.company}
+          </p>
+          <p className="hero-bio fu d3">{p.bio}</p>
+          <div className="hero-btns fu d4">
+            <a href="#projects" className="btn btn-primary">View Projects <Icon name="arrow" size={14} color="#fff" /></a>
+            <a href={`mailto:${p.email}`} className="btn btn-light">Get In Touch</a>
+            <a href={p.github} target="_blank" className="btn btn-light">
+              <Icon name="github" size={15} color="var(--dark-text2)" /> GitHub
+            </a>
+          </div>
+          <div className="hero-stats fu d5">
+            {DATA.stats.map(s => (
+              <div key={s.label}>
+                <div className="stat-val">{s.value}</div>
+                <div className="stat-lbl">{s.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* PHOTO — set DATA.profile.photo = "your-file.jpg" to display */}
+        <div className="photo-frame fu d3">
+          {p.photo
+            ? <img src={p.photo} alt={`${p.firstName} ${p.lastName}`} />
+            : <div className="photo-placeholder">
+                <Icon name="user" size={72} />
+                <span className="ph-label">Add your photo here</span>
+              </div>
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+  );
+};
+
+/* ── ABOUT — light ── */
+const About = () => (
+  <section className="section about-section" id="about">
+    <div className="wrap">
+      <p className="eyebrow-dk">About</p>
+      <h2 className="section-h-dk">Backend infrastructure<br />built for production.</h2>
+      <p className="section-p-dk">My focus is on the systems layer — distributed messaging, caching strategy, and zero-downtime operations that keep products reliable at scale.</p>
+      <div className="about-grid">
+        {DATA.about.map(c => (
+          <div key={c.title} className="about-cell">
+            <p className="ac-label">{c.label}</p>
+            <h3 className="ac-title">{c.title}</h3>
+            <p className="ac-desc">{c.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+);
+
+/* ── SKILLS — dark ── */
+const Skills = () => (
+  <section className="section skills-section" id="skills">
+    <div className="wrap">
+      <p className="eyebrow-dk">Skills</p>
+      <h2 className="section-h-dk">Technical Proficiencies</h2>
+      <p className="section-p-dk">Technologies I build production systems with.</p>
+      {Object.entries(DATA.skills).map(([group, chips]) => (
+        <div className="skill-row" key={group}>
+          <div className="skill-row-label">{group}</div>
+          <div className="skill-chips">
+            {chips.map(s => <span className="skill-chip" key={s}>{s}</span>)}
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+);
+
+/* ── EXPERIENCE — light ── */
+const Experience = () => (
+  <section className="section exp-section" id="experience">
+    <div className="wrap">
+      <p className="eyebrow-dk">Experience</p>
+      <h2 className="section-h-dk">Work History</h2>
+      <p className="section-p-dk" style={{marginBottom:'40px'}}>Building and shipping backend systems at Zoho.</p>
+      <div className="timeline">
+        {DATA.experience.map((e, i) => (
+          <div className="tl-item" key={i}>
+            <div className="tl-marker"><div className="tl-dot" /></div>
+            <div className="card-dk tl-card">
+              <div className="tl-head">
+                <div>
+                  <div className="tl-role">{e.role}</div>
+                  <div className="tl-company">{e.company}</div>
+                  <div className="tl-loc">{e.location}</div>
+                </div>
+                <span className="tl-period">{e.period}</span>
+              </div>
+              <ul className="tl-bullets">
+                {e.bullets.map((b, j) => <li key={j}>{b}</li>)}
+              </ul>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+);
+
+/* ── PROJECTS — dark ── */
+const Projects = () => (
+  <section className="section projects-section" id="projects">
+    <div className="wrap">
+      <p className="eyebrow-dk">Projects</p>
+      <h2 className="section-h-dk">Selected Work</h2>
+      <p className="section-p-dk">End-to-end projects demonstrating backend depth and systems thinking.</p>
+      <div className="proj-grid">
+        {DATA.projects.map((p, i) => (
+          <div key={i} className="proj-cell">
+            <div className="proj-number">{String(i + 1).padStart(2, "0")}</div>
+            <div className="proj-name">{p.name}</div>
+            <div className="proj-sub">{p.tagline}</div>
+            <div className="proj-divider" />
+            <ul className="proj-bullets">
+              {p.bullets.map((b, j) => <li key={j}>{b}</li>)}
+            </ul>
+            <div className="proj-tags">
+              {p.stack.map(t => <span key={t} className={`tag ${p.tagStyle}`}>{t}</span>)}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+);
+
+/* ── EDUCATION — light ── */
+const Education = () => (
+  <section className="section edu-section" id="education">
+    <div className="wrap">
+      <p className="eyebrow-dk">Education</p>
+      <h2 className="section-h-dk">Academic Background</h2>
+      <div style={{marginTop:'32px'}}>
+        <div className="card-dk">
+          <div className="edu-row">
+            <div>
+              <div className="edu-school">{DATA.education.institution}</div>
+              <div className="edu-degree">{DATA.education.degree}</div>
+              <div className="edu-loc">{DATA.education.location}</div>
+            </div>
+            <div className="edu-right">
+              <div className="edu-year">{DATA.education.year}</div>
+              <div className="edu-cgpa">CGPA: {DATA.education.cgpa}</div>
+            </div>
+          </div>
+          {DATA.achievements.map((a, i) => (
+            <div className="ach-row" key={i}>
+              <div className="ach-count">{a.count}</div>
+              <div className="ach-body">
+                <h4>{a.title}</h4>
+                <p>{a.desc}</p>
+              </div>
+              <div style={{marginLeft:'auto', display:'flex', alignItems:'center', gap:'10px', flexShrink:0}}>
+                <span className="tag tag-dark">Achievement</span>
+                {a.profileUrl && (
+                  <a href={a.profileUrl} target="_blank" style={{
+                    display:'inline-flex', alignItems:'center', gap:'6px',
+                    fontSize:'0.78rem', fontWeight:'600',
+                    color:'var(--accent-lt)', textDecoration:'none',
+                    border:'1px solid rgba(59,130,246,0.3)',
+                    background:'rgba(59,130,246,0.08)',
+                    padding:'4px 12px', borderRadius:'4px',
+                    transition:'all .2s',
+                  }}
+                  onMouseOver={e => e.currentTarget.style.background='rgba(59,130,246,0.18)'}
+                  onMouseOut={e => e.currentTarget.style.background='rgba(59,130,246,0.08)'}
+                  >
+                    Open Profile <Icon name="arrow" size={12} color="var(--accent-lt)" />
+                  </a>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+);
+
+/* ── CONTACT — dark ── */
+const Contact = () => (
+  <section className="section contact-section" id="contact">
+    <div className="wrap">
+      <div className="cta-band">
+        <div>
+          <h2>Open to new opportunities.</h2>
+          <p>Backend engineering roles, distributed systems challenges, or interesting technical conversations — reach out and let's talk.</p>
+        </div>
+        <a href={`mailto:${DATA.profile.email}`} className="btn-white">
+          Send a message <Icon name="arrow" size={15} color="var(--navy)" />
+        </a>
+      </div>
+      <div className="contact-grid">
+        {[
+          { icon:"mail",     label:"Email",    val:DATA.profile.email, href:`mailto:${DATA.profile.email}` },
+          { icon:"phone",    label:"Phone",    val:DATA.profile.phone, href:`tel:${DATA.profile.phone}` },
+          { icon:"linkedin", label:"LinkedIn", val:DATA.profile.linkedin.replace("https://www.linkedin.com/in/",""), href:DATA.profile.linkedin },
+          { icon:"github",   label:"GitHub",   val:DATA.profile.github.replace("https://",""),   href:DATA.profile.github },
+          { icon:"leetcode", label:"LeetCode", val:"leetcode.com/u/mohanraj1124",                 href:DATA.profile.leetcode },
+        ].map(c => (
+          <a href={c.href} key={c.label} target={c.href.startsWith('http')?'_blank':undefined} className="contact-item">
+            <div className="contact-icon-wrap">
+              <Icon name={c.icon} size={16} color="var(--dark-text2)" />
+            </div>
+            <div>
+              <div className="ci-label">{c.label}</div>
+              <div className="ci-val">{c.val}</div>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+);
+
+/* ── APP ── */
+const App = () => (
+  <>
+    <Nav />
+    <Hero />
+    <About />
+    <Skills />
+    <Experience />
+    <Projects />
+    <Education />
+    <Contact />
+    <footer>
+      <span>{DATA.profile.firstName} {DATA.profile.lastName} — {DATA.profile.role} & {DATA.profile.role2}</span>
+      <span style={{display:'flex', gap:'20px'}}>
+        <a href={DATA.profile.linkedin} target="_blank">LinkedIn</a>
+        <a href={DATA.profile.github} target="_blank">GitHub</a>
+        <a href={`mailto:${DATA.profile.email}`}>Email</a>
+        <span>© 2026</span>
+      </span>
+    </footer>
+  </>
+);
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
